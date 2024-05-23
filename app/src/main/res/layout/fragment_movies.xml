@@ -14,7 +14,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="5dp"
-        android:background="#BF1C1C1C"
+        android:background="#9FAA8500"
         android:textAlignment="textStart"
         app:layout_constraintEnd_toStartOf="@+id/animationView"
         app:layout_constraintStart_toStartOf="parent"

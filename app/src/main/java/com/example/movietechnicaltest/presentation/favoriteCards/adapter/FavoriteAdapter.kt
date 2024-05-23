@@ -1,4 +1,4 @@
-package com.example.movietechnicaltest.presentation.cards.adapters
+package com.example.movietechnicaltest.presentation.favoriteCards.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -11,11 +11,10 @@ import com.example.movietechnicaltest.core.show
 import com.example.movietechnicaltest.databinding.ItemMovieBinding
 import com.example.movietechnicaltest.domain.models.Card
 
-class MoviesAdapter(
+class FavoriteAdapter(
     private val list: List<Card>,
-    private val onClickItem: (Card) -> Unit,
 ) :
-    RecyclerView.Adapter<MoviesAdapter.CardsViewHolder>() {
+    RecyclerView.Adapter<FavoriteAdapter.CardsViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CardsViewHolder {
         val itemBinding = ItemMovieBinding.inflate(
@@ -30,13 +29,13 @@ class MoviesAdapter(
 
 
     override fun onBindViewHolder(holder: CardsViewHolder, position: Int) {
-        holder.bind(list[position], onClickItem)
+        holder.bind(list[position])
     }
 
     class CardsViewHolder(private val binding: ItemMovieBinding, private val context: Context) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: Card, onClickItem: (Card) -> Unit) {
+        fun bind(item: Card) {
             binding.constraintLayout1.hide()
 
             Glide.with(context)
@@ -49,24 +48,6 @@ class MoviesAdapter(
                 binding.constraintLayout1.show()
             }
             binding.textviewYear.text = item.type
-            binding.root.setOnClickListener {
-                binding.animationView.animate().translationY(300f).alpha(0f).setDuration(0)
-                    .withEndAction {
-                        binding.animationView.visibility = View.VISIBLE
-                        binding.animationView.animate().translationY(0f).alpha(1f).setDuration(1000)
-                            .withEndAction {
-                                binding.animationView.visibility = View.GONE
-                            }
-                    }
-                onClickItem(item)
-
-                item.isFavorite = !item.isFavorite
-                if (item.isFavorite) {
-                    binding.constraintLayout1.show()
-                } else {
-                    binding.constraintLayout1.hide()
-                }
-            }
         }
     }
 }
