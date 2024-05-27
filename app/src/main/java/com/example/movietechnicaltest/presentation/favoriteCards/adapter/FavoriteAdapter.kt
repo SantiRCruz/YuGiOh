@@ -13,6 +13,7 @@ import com.example.movietechnicaltest.domain.models.Card
 
 class FavoriteAdapter(
     private val list: List<Card>,
+    private val onClickItem: (Card) -> Unit,
 ) :
     RecyclerView.Adapter<FavoriteAdapter.CardsViewHolder>() {
 
@@ -29,13 +30,13 @@ class FavoriteAdapter(
 
 
     override fun onBindViewHolder(holder: CardsViewHolder, position: Int) {
-        holder.bind(list[position])
+        holder.bind(list[position], onClickItem)
     }
 
     class CardsViewHolder(private val binding: ItemMovieBinding, private val context: Context) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: Card) {
+        fun bind(item: Card, onClickItem: (Card) -> Unit) {
             binding.constraintLayout1.hide()
 
             Glide.with(context)
@@ -48,6 +49,10 @@ class FavoriteAdapter(
                 binding.constraintLayout1.show()
             }
             binding.textviewYear.text = item.type
+
+            binding.root.setOnClickListener {
+                onClickItem(item)
+            }
         }
     }
 }

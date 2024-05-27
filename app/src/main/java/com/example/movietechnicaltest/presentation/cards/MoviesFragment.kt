@@ -35,6 +35,10 @@ class MoviesFragment : Fragment(R.layout.fragment_movies) {
             setUpCard(it)
         }
 
+        viewModel.archetypes.observe(viewLifecycleOwner) {
+            println("Archetypes: $it")
+        }
+
         viewModel.updateSuccess.observe(viewLifecycleOwner) {
             if (it) {
 

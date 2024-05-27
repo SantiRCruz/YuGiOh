@@ -2,6 +2,8 @@ package com.example.movietechnicaltest.data.mapper
 
 import com.example.movietechnicaltest.data.local.CardsEntity
 import com.example.movietechnicaltest.data.remote.dto.DataDto
+import com.example.movietechnicaltest.data.remote.dto.archetype.ArchetypesDto
+import com.example.movietechnicaltest.domain.models.Archetype
 import com.example.movietechnicaltest.domain.models.Card
 
 
@@ -38,5 +40,11 @@ fun DataDto.toCardsEntity(): CardsEntity {
         imageUrl = images?.get(0)?.imageUrl ?: "",
         isFavorite = false,
         id = id ?: 0
+    )
+}
+
+fun ArchetypesDto.toArchetype(): Archetype {
+    return Archetype(
+        archetypeName = archetypeName ?: "",
     )
 }

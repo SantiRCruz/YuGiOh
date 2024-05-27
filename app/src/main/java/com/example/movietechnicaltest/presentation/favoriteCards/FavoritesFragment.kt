@@ -21,6 +21,8 @@ class FavoritesFragment : Fragment(R.layout.fragment_favorites) {
 
     private val viewModel by viewModels<FavoritesViewModel>()
 
+    private lateinit var adapter: FavoriteAdapter
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentFavoritesBinding.bind(view)
@@ -55,12 +57,15 @@ class FavoritesFragment : Fragment(R.layout.fragment_favorites) {
     }
 
     private fun setUpCard(data: List<Card>) {
-        val adapter = FavoriteAdapter(data)
+        val adapter = FavoriteAdapter(data, onClickItem = { card ->
+            onClickCard(card)
+        })
         binding.rvMovies.layoutManager = LinearLayoutManager(requireContext())
         binding.rvMovies.adapter = adapter
     }
 
     private fun onClickCard(it: Card) {
         viewModel.onFavoriteEvent(it.id, it.isFavorite)
+        viewModel.searchFavoriteCards()
     }
 }

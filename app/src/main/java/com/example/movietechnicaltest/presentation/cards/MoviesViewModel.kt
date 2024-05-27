@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.movietechnicaltest.domain.models.Archetype
 import com.example.movietechnicaltest.domain.models.Card
 import com.example.movietechnicaltest.domain.repository.CardsRepo
 import com.example.movietechnicaltest.util.Resource
@@ -22,16 +23,43 @@ class MoviesViewModel @Inject constructor(
     private val _cards by lazy { MutableLiveData<List<Card>>() }
     val cards: LiveData<List<Card>> = _cards
 
+    private val _archetypes by lazy { MutableLiveData<List<Archetype>>() }
+    val archetypes: LiveData<List<Archetype>> = _archetypes
+
     private val _loading by lazy { MutableLiveData<Boolean>() }
     val loading: LiveData<Boolean> = _loading
 
     private val _updateSuccess by lazy { MutableLiveData<Boolean>() }
     val updateSuccess: LiveData<Boolean> = _updateSuccess
 
+    private val _error by lazy { MutableLiveData<String>() }
+    val error: LiveData<String> = _error
+
     private var searchJob: Job? = null
 
     init {
         getCards()
+        getArchetypes()
+    }
+
+    private fun getArchetypes() {
+        viewModelScope.launch {
+            repository.getArchetypes().collect { result ->
+                when (result) {
+                    is Resource.Success -> {
+                        _archetypes.postValue(result.data)
+                    }
+
+                    is Resource.Error -> {
+                        _error.postValue(result.message)
+                    }
+
+                    is Resource.Loading -> {
+                        _loading.postValue(result.isLoading)
+                    }
+                }
+            }
+        }
     }
 
     fun onSearchEvent(query: String) {

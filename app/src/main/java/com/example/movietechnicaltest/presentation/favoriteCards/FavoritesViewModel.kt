@@ -29,6 +29,7 @@ class FavoritesViewModel @Inject constructor(
         searchFavoriteCards()
     }
 
+
     fun onFavoriteEvent(
         id: Int, isFavorite: Boolean
     ) {
@@ -54,7 +55,7 @@ class FavoritesViewModel @Inject constructor(
         }
     }
 
-    private fun searchFavoriteCards() {
+    fun searchFavoriteCards() {
         viewModelScope.launch {
             repository
                 .searchFavoriteCards()

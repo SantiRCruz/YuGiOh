@@ -2,9 +2,11 @@ package com.example.movietechnicaltest.data.repository
 
 import android.app.Application
 import com.example.movietechnicaltest.data.local.YuGiOhDatabase
+import com.example.movietechnicaltest.data.mapper.toArchetype
 import com.example.movietechnicaltest.data.mapper.toCard
 import com.example.movietechnicaltest.data.mapper.toCardsEntity
 import com.example.movietechnicaltest.data.remote.YuGiOhApi
+import com.example.movietechnicaltest.domain.models.Archetype
 import com.example.movietechnicaltest.domain.models.Card
 import com.example.movietechnicaltest.domain.repository.CardsRepo
 import com.example.movietechnicaltest.util.Resource
@@ -41,7 +43,7 @@ class CardsRepoImpl @Inject constructor(
                 return@flow
             }
             val remoteListing = try {
-                api.getCards()
+                api.getCards("Amazoness")
             } catch (e: IOException) {
                 e.printStackTrace()
                 emit(Resource.Error("Couldn't load data"))
@@ -67,6 +69,12 @@ class CardsRepoImpl @Inject constructor(
                 emit(Resource.Loading(false))
             }
         }
+    }
+
+    private fun buildCardsFilter(archetype: String): Map<String, String> {
+        return mapOf(
+            "archetype" to archetype,
+        )
     }
 
     override suspend fun searchFavoriteCards(): Flow<Resource<List<Card>>> {
@@ -98,6 +106,21 @@ class CardsRepoImpl @Inject constructor(
                         message = "No se logro guardar en tus favoritos"
                     )
                 )
+            }
+            emit(Resource.Loading(false))
+        }
+    }
+
+    override suspend fun getArchetypes(): Flow<Resource<List<Archetype>>> {
+        return flow {
+            emit(Resource.Loading(true))
+            val archetypes = api.getArchetypes()
+            try {
+                emit(Resource.Success(archetypes.map {
+                    it.toArchetype()
+                }))
+            } catch (e: Exception) {
+                emit(Resource.Error("Hubo un fallo"))
             }
             emit(Resource.Loading(false))
         }
